@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from django.db.models import Q
+from django.views.decorators.cache import cache_page
 from .models import Question, VerificationResult, Paper
 from .serializers import (
     QuestionSerializer, VerificationResultSerializer,
@@ -9,10 +10,13 @@ from .serializers import (
 )
 
 
+@cache_page(60 * 60 * 6)
 @api_view(['GET'])
 def bank(request):
     """Full MPSC question bank in the shape the india-study-map frontend
-    expects: {papers: ExamPaper[], questions: BankQuestion[]}."""
+    expects: {papers: ExamPaper[], questions: BankQuestion[]}. Serializing
+    69K+ rows is CPU-heavy on the free instance (~20s cold) — cached for 6h
+    so only the first request after a deploy/restart pays that cost."""
     papers = BankPaperSerializer(Paper.objects.all(), many=True).data
     questions = BankQuestionSerializer(Question.objects.all(), many=True).data
     return Response({'papers': papers, 'questions': questions})
