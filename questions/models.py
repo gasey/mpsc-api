@@ -1,5 +1,20 @@
 from django.db import models
 
+class Paper(models.Model):
+    """A real MPSC exam paper — referenced by Question.paper_id."""
+    id = models.CharField(max_length=255, primary_key=True)
+    exam_type = models.CharField(max_length=50)
+    exam_name = models.CharField(max_length=255)
+    post = models.CharField(max_length=255, blank=True, null=True)
+    paper_number = models.CharField(max_length=50, blank=True, null=True)
+    paper_subject = models.CharField(max_length=255)
+    year = models.IntegerField(blank=True, null=True)
+    source_file = models.CharField(max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return self.id
+
+
 class Question(models.Model):
     """73,405 MPSC questions extracted from 2,492 exam papers"""
     question_id = models.CharField(max_length=50, unique=True, db_index=True)

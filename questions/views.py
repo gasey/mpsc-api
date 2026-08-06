@@ -1,9 +1,21 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from django.db.models import Q
-from .models import Question, VerificationResult
-from .serializers import QuestionSerializer, VerificationResultSerializer
+from .models import Question, VerificationResult, Paper
+from .serializers import (
+    QuestionSerializer, VerificationResultSerializer,
+    BankPaperSerializer, BankQuestionSerializer,
+)
+
+
+@api_view(['GET'])
+def bank(request):
+    """Full MPSC question bank in the shape the india-study-map frontend
+    expects: {papers: ExamPaper[], questions: BankQuestion[]}."""
+    papers = BankPaperSerializer(Paper.objects.all(), many=True).data
+    questions = BankQuestionSerializer(Question.objects.all(), many=True).data
+    return Response({'papers': papers, 'questions': questions})
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     """API for 73,405 MPSC questions"""
