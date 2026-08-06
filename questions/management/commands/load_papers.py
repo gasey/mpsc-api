@@ -27,11 +27,11 @@ class Command(BaseCommand):
             obj, was_created = Paper.objects.get_or_create(
                 id=p.get('id'),
                 defaults={
-                    'exam_type': p.get('examType', ''),
-                    'exam_name': p.get('examName', ''),
+                    'exam_type': p.get('examType') or '',
+                    'exam_name': p.get('examName') or '',
                     'post': p.get('post') or None,
                     'paper_number': p.get('paperNumber') if p.get('paperNumber') not in (None, 'None') else None,
-                    'paper_subject': p.get('paperSubject', ''),
+                    'paper_subject': p.get('paperSubject') or '',
                     'year': year,
                     'source_file': p.get('sourceFile') or None,
                 }
