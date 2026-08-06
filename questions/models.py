@@ -14,7 +14,7 @@ class Question(models.Model):
 
     paper_id = models.CharField(max_length=255, db_index=True)
     subject = models.CharField(max_length=100, default='gk')
-    topic = models.CharField(max_length=100, db_index=True)
+    topic = models.CharField(max_length=255, db_index=True)
 
     has_diagram = models.BooleanField(default=False)
     diagram_image = models.CharField(max_length=500, blank=True, null=True)
